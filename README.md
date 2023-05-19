@@ -1,7 +1,6 @@
 # BabysitterKata
 
 
-Babysitter Kata
 
 Background
 ----------
