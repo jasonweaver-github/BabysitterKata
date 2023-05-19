@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WageForBabysitter", "WageForBabysitter\WageForBabysitter.csproj", "{526FA8AB-0786-4B9F-942B-9B9364957F32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WageForBabysitterTests", "WageForBabysitterTest\WageForBabysitterTests.csproj", "{38AC5968-0D56-4364-957D-D97BA6D76A04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{526FA8AB-0786-4B9F-942B-9B9364957F32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{526FA8AB-0786-4B9F-942B-9B9364957F32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{526FA8AB-0786-4B9F-942B-9B9364957F32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{526FA8AB-0786-4B9F-942B-9B9364957F32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38AC5968-0D56-4364-957D-D97BA6D76A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38AC5968-0D56-4364-957D-D97BA6D76A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38AC5968-0D56-4364-957D-D97BA6D76A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38AC5968-0D56-4364-957D-D97BA6D76A04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CFD7A573-934B-4B6D-8494-067CB06B846C}
+	EndGlobalSection
+EndGlobal
