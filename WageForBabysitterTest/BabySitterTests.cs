@@ -10,7 +10,7 @@ namespace WageForBabysitterTests
         [Fact]
         public void WhenValidDateIsSubmitted_ThenExtractHourAndConvertToInt()
         {
-            // Arrange`
+            // Arrange
             DateTime startTime = new DateTime(2023, 1, 1, 20, 0, 0); // 8:00 PM
             DateTime bedTime = new DateTime(2023, 1, 1, 22, 0, 0); // 10:00 PM
             DateTime endTime = new DateTime(2023, 1, 2, 2, 0, 0); // 2:00 AM
@@ -47,13 +47,12 @@ namespace WageForBabysitterTests
             int startTime = 2;
             int bedTime = 1;
             int endTime = 3;
-            int expectedStartTime = 25;
+            var expected = "Invalid time range. Bedtime must be earlier than midnight.";
+            //int expectedBedTime = 25;
 
-            // Act
-            babySitter.CalculatePayment(startTime, bedTime, endTime);
-
-            // Assert
-            Assert.Equal(expectedStartTime, babySitter.BedTimeTest);
+            // Act/Assert
+            var exception = Assert.Throws<Exception>(() => babySitter.CalculatePayment(startTime, bedTime, endTime));
+            Assert.Equal(expected, exception.Message);
         }
 
         [Fact]
@@ -63,13 +62,13 @@ namespace WageForBabysitterTests
             int startTime = 2;
             int bedTime = 21;
             int endTime = 3;
-            int expectedStartTime = 27;
+            int expectedEndTime = 27;
 
             // Act
             babySitter.CalculatePayment(startTime, bedTime, endTime);
 
             // Assert
-            Assert.Equal(expectedStartTime, babySitter.EndTimeTest);
+            Assert.Equal(expectedEndTime, babySitter.EndTimeTest);
         }
 
         [Fact]
@@ -93,7 +92,7 @@ namespace WageForBabysitterTests
         }
 
         [Fact]
-        public void WhenEndTimeIsAfter4andBefore17_ThrowsException()
+        public void WhenEndTimeIsAfter4andBefore17_ThenThrowException()
         {
             // Arrange
             var expected = "Invalid time range. The babysitter must leave no later than 4:00AM.";
@@ -113,7 +112,7 @@ namespace WageForBabysitterTests
         }
 
         [Fact]
-        public void WhenStartTimeIsGreaterThanEndTime_ThrowsException()
+        public void WhenStartTimeIsGreaterThanEndTime_ThenThrowException()
         {
             // Arrange
             var expected = "Invalid time range. The babysitter's end time must be later than their arrival time.";
@@ -131,9 +130,28 @@ namespace WageForBabysitterTests
         }
 
         [Fact]
+        public void WhenBedTimeIsEqualToOrGreaterThanMidnight_ThenThrowException()
+        {
+            // Arrange
+            var expected = "Invalid time range. Bedtime must be earlier than midnight.";
+            int startTime = babySitter.StartTime = 20; // 8:00 PM
+            int bedTime = babySitter.BedTime = 25; // 1:00 AM
+            int midnight = 24; // 12:00 AM
+            int endTime = babySitter.EndTime = 26; // 2:00 AM
+
+            // Act
+            if (bedTime > midnight)
+            {
+                // Assert
+                var exception = Assert.Throws<Exception>(() => babySitter.CalculatePayment(startTime, bedTime, endTime));
+                Assert.Equal(expected, exception.Message);
+            }
+        }
+
+        [Fact]
         public void WhenOrderOfEventsIsStartTimeBedTimeMidnightEndTime_ThenCalculateNumOfHoursCorrectly()
         {
-            //Order of events: StartTime => BedTime => Midnight => EndTime
+            //Order of events: StartTime -> BedTime -> Midnight -> EndTime
             // Arrange
             int startTime = 18;
             int bedTime = 21;
@@ -153,33 +171,34 @@ namespace WageForBabysitterTests
             Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
         }
 
-        [Fact]
-        public void WhenOrderOfEventsIsStartTimeMidnightBedTimeEndTime_ThenCalculateNumOfHoursCorrectly()
-        {
-            //Order of events: StartTime => Midnight => BedTime => EndTime
-            // Arrange
-            int startTime = 20;
-            int midnight = 24;
-            int bedTime = 25;
-            int endTime = 26;
+        // Note: This scenario for this test is deprecated because it's no longer possible for bedtime to be after midnight.
+        //[Fact]
+        //public void WhenOrderOfEventsIsStartTimeMidnightBedTimeEndTime_ThenCalculateNumOfHoursCorrectly()
+        //{
+        //    //Order of events: StartTime -> Midnight -> BedTime -> EndTime
+        //    // Arrange
+        //    int startTime = 20;
+        //    int midnight = 24;
+        //    int bedTime = 25;
+        //    int endTime = 26;
 
-            int expectedStartTimeToBedTimeNumOfHours = midnight - startTime;
-            int expectedBedTimeToMidnightNumOfHours = 0;
-            int expectedMidnightToEndTimeNumOfHours = endTime - midnight;
+        //    int expectedStartTimeToBedTimeNumOfHours = midnight - startTime;
+        //    int expectedBedTimeToMidnightNumOfHours = 0;
+        //    int expectedMidnightToEndTimeNumOfHours = endTime - midnight;
 
-            // Act
-            babySitter.CalculatePayment(startTime, bedTime, endTime);
+        //    // Act
+        //    babySitter.CalculatePayment(startTime, bedTime, endTime);
 
-            // Assert
-            Assert.Equal(expectedStartTimeToBedTimeNumOfHours, babySitter.StartTimeToBedTimeNumOfHours);
-            Assert.Equal(expectedBedTimeToMidnightNumOfHours, babySitter.BedTimeToMidnightNumOfHours);
-            Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
-        }
+        //    // Assert
+        //    Assert.Equal(expectedStartTimeToBedTimeNumOfHours, babySitter.StartTimeToBedTimeNumOfHours);
+        //    Assert.Equal(expectedBedTimeToMidnightNumOfHours, babySitter.BedTimeToMidnightNumOfHours);
+        //    Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
+        //}
 
         [Fact]
         public void WhenOrderOfEventsIsStartTimeBedTimeEndTimeMidnight_ThenCalculateNumOfHoursCorrectly()
         {
-            //Order of events: StartTime => BedTime => EndTime => Midnight
+            //Order of events: StartTime -> BedTime -> EndTime -> Midnight
             // Arrange
             int startTime = 20;
             int bedTime = 21;                       
@@ -202,7 +221,7 @@ namespace WageForBabysitterTests
         [Fact]
         public void WhenOrderOfEventsIsStartTimeEndTimeBedTimeMidnight_ThenCalculateNumOfHoursCorrectly()
         {
-            //Order of events: StartTime => EndTime => BedTime/Midnight
+            //Order of events: StartTime -> EndTime -> BedTime/Midnight
             // Arrange
             int startTime = 19;
             int endTime = 20;
@@ -222,33 +241,34 @@ namespace WageForBabysitterTests
             Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
         }
 
-        [Fact]
-        public void WhenOrderOfEventsIsStartTimeMidnightEndTimeBedTime_ThenCalculateNumOfHoursCorrectly()
-        {
-            //Order of events: StartTime => Midnight => EndTime => BedTime
-            // Arrange
-            int startTime = 19;
-            int midnight = 24;
-            int endTime = 26;
-            int bedTime = 27;
-                       
-            int expectedStartTimeToBedTimeNumOfHours = midnight - startTime;
-            int expectedBedTimeToMidnightNumOfHours = 0;
-            int expectedMidnightToEndTimeNumOfHours = endTime - midnight;
+        // Note: This scenario for this test is deprecated because it's no longer possible for bedtime to be after midnight.
+        //[Fact]
+        //public void WhenOrderOfEventsIsStartTimeMidnightEndTimeBedTime_ThenCalculateNumOfHoursCorrectly()
+        //{
+        //    //Order of events: StartTime -> Midnight -> EndTime -> BedTime
+        //    // Arrange
+        //    int startTime = 19;
+        //    int midnight = 24;
+        //    int endTime = 26;
+        //    int bedTime = 27;
 
-            // Act
-            babySitter.CalculatePayment(startTime, bedTime, endTime);
+        //    int expectedStartTimeToBedTimeNumOfHours = midnight - startTime;
+        //    int expectedBedTimeToMidnightNumOfHours = 0;
+        //    int expectedMidnightToEndTimeNumOfHours = endTime - midnight;
 
-            // Assert
-            Assert.Equal(expectedStartTimeToBedTimeNumOfHours, babySitter.StartTimeToBedTimeNumOfHours);
-            Assert.Equal(expectedBedTimeToMidnightNumOfHours, babySitter.BedTimeToMidnightNumOfHours);
-            Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
-        }
+        //    // Act
+        //    babySitter.CalculatePayment(startTime, bedTime, endTime);
+
+        //    // Assert
+        //    Assert.Equal(expectedStartTimeToBedTimeNumOfHours, babySitter.StartTimeToBedTimeNumOfHours);
+        //    Assert.Equal(expectedBedTimeToMidnightNumOfHours, babySitter.BedTimeToMidnightNumOfHours);
+        //    Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
+        //}
 
         [Fact]
         public void WhenOrderOfEventsIsBedTimeStartTimeMidnightEndTime_ThenCalculateNumOfHoursCorrectly()
         {
-            //Order of events: BedTime => StartTime => Midnight => EndTime
+            //Order of events: BedTime -> StartTime -> Midnight -> EndTime
             // Arrange
             int bedTime = 19;
             int startTime = 22;           
@@ -269,9 +289,32 @@ namespace WageForBabysitterTests
         }
 
         [Fact]
+        public void WhenOrderOfEventsIsBedTimeStartTimeEndTimeMidnight_ThenCalculateNumOfHoursCorrectly()
+        {
+            //Order of events: BedTime -> StartTime -> EndTime -> Midnight
+            // Arrange            
+            int bedTime = 18;          
+            int startTime = 19;
+            int endTime = 22;
+            int midnight = 24;
+
+            int expectedStartTimeToBedTimeNumOfHours = 0;
+            int expectedBedTimeToMidnightNumOfHours = endTime - startTime;
+            int expectedMidnightToEndTimeNumOfHours = 0;
+
+            // Act
+            babySitter.CalculatePayment(startTime, bedTime, endTime);
+
+            // Assert
+            Assert.Equal(expectedStartTimeToBedTimeNumOfHours, babySitter.StartTimeToBedTimeNumOfHours);
+            Assert.Equal(expectedBedTimeToMidnightNumOfHours, babySitter.BedTimeToMidnightNumOfHours);
+            Assert.Equal(expectedMidnightToEndTimeNumOfHours, babySitter.MidnightToEndTimeNumOfHours);
+        }
+
+        [Fact]
         public void WhenOrderOfEventsIsBedTimeMidnightStartTimeEndTime_ThenCalculateNumOfHoursCorrectly()
         {
-            //Order of events: BedTime => Midnight => StartTime => EndTime
+            //Order of events: BedTime -> Midnight -> StartTime -> EndTime
             // Arrange            
             int bedTime = 23;
             int midnight = 24;
@@ -294,7 +337,7 @@ namespace WageForBabysitterTests
         [Fact]
         public void WhenOrderOfEventsIsMidnightStartTimeEndTime_ThenCalculateNumOfHoursCorrectly()
         {
-            //Order of events: Midnight => StartTime => EndTime
+            //Order of events: Midnight -> StartTime -> EndTime
             // Arrange
             var babySitter = new BabySitter();
             int bedTime = 20;

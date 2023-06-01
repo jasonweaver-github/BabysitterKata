@@ -53,7 +53,7 @@
             BedTimeTest = BedTime;
             EndTimeTest = EndTime;
 
-            // This block of code is validating agaisnt invalid time ranges and throwing an error when any occur.
+            // This block of code is validating against invalid time ranges and throwing an error when any occur.
             if (StartTime < EarliestArrivalTime && StartTime > LatestDepartureTime)
             {
                 throw new Exception("Invalid time range. The babysitter must arrive no earlier than 5:00PM.");
@@ -69,56 +69,70 @@
                 throw new Exception("Invalid time range. The babysitter's end time must be later than their arrival time.");
             }
 
-            // Order of events: StartTime => BedTime => Midnight => EndTime
+            if (BedTime >= Midnight)
+            {
+                throw new Exception("Invalid time range. Bedtime must be earlier than midnight.");
+            }
+
+            // Order of events: StartTime -> BedTime -> Midnight -> EndTime
             if (StartTime <= BedTime && BedTime <= Midnight && Midnight <= EndTime)
             {
                 StartTimeToBedTimeNumOfHours = BedTime - StartTime;
                 BedTimeToMidnightNumOfHours = Midnight - BedTime;
                 MidnightToEndTimeNumOfHours = EndTime - Midnight;
             }
-            // Order of events: StartTime => Midnight => BedTime => EndTime
-            else if (StartTime <= Midnight && Midnight <= BedTime && BedTime <= EndTime)
-            {
-                StartTimeToBedTimeNumOfHours = Midnight - StartTime;
-                BedTimeToMidnightNumOfHours = 0;
-                MidnightToEndTimeNumOfHours = EndTime - Midnight;
-            }
-            // Order of events: StartTime => BedTime => EndTime => Midnight
+            // Note: This scenario is deprecated because it's no longer possible for bedtime to be after midnight.
+            // Order of events: StartTime -> Midnight -> BedTime -> EndTime
+            //else if (StartTime <= Midnight && Midnight <= BedTime && BedTime <= EndTime)
+            //{
+            //    StartTimeToBedTimeNumOfHours = Midnight - StartTime;
+            //    BedTimeToMidnightNumOfHours = 0;
+            //    MidnightToEndTimeNumOfHours = EndTime - Midnight;
+            //}
+            // Order of events: StartTime -> BedTime -> EndTime -> Midnight
             else if (StartTime <= BedTime && BedTime <= EndTime && EndTime <= Midnight)
             {
                 StartTimeToBedTimeNumOfHours = BedTime - StartTime;
                 BedTimeToMidnightNumOfHours = EndTime - BedTime;
                 MidnightToEndTimeNumOfHours = 0;
             }
-            // Order of events: StartTime => EndTime => BedTime/Midnight
+            // Order of events: StartTime -> EndTime -> BedTime/Midnight
             else if (StartTime <= EndTime && EndTime <= BedTime && EndTime <= Midnight)
             {
                 StartTimeToBedTimeNumOfHours = EndTime - StartTime;
                 BedTimeToMidnightNumOfHours = 0;
                 MidnightToEndTimeNumOfHours = 0;
             }
-            // Order of events: StartTime => Midnight => EndTime => BedTime
-            else if (StartTime <= Midnight && Midnight <= EndTime && EndTime <= BedTime)
-            {
-                StartTimeToBedTimeNumOfHours = Midnight - StartTime;
-                BedTimeToMidnightNumOfHours = 0;
-                MidnightToEndTimeNumOfHours = EndTime - Midnight;
-            }
-            // Order of events: BedTime => StartTime => Midnight => EndTime
+            // Note: This scenario is deprecated because it's no longer possible for bedtime to be after midnight.
+            // Order of events: StartTime -> Midnight -> EndTime -> BedTime
+            //else if (StartTime <= Midnight && Midnight <= EndTime && EndTime <= BedTime)
+            //{
+            //    StartTimeToBedTimeNumOfHours = Midnight - StartTime;
+            //    BedTimeToMidnightNumOfHours = 0;
+            //    MidnightToEndTimeNumOfHours = EndTime - Midnight;
+            //}
+            // Order of events: BedTime -> StartTime -> Midnight -> EndTime
             else if (BedTime <= StartTime && StartTime <= Midnight && Midnight <= EndTime)
             {
                 StartTimeToBedTimeNumOfHours = 0;
                 BedTimeToMidnightNumOfHours = Midnight - StartTime;
                 MidnightToEndTimeNumOfHours = EndTime - Midnight;
             }
-            // Order of events: BedTime => Midnight => StartTime => EndTime
+            //Order of events: BedTime -> StartTime -> EndTime -> Midnight
+            else if (BedTime <= StartTime && StartTime <= EndTime && EndTime <= Midnight)
+            {
+                StartTimeToBedTimeNumOfHours = 0;
+                BedTimeToMidnightNumOfHours = EndTime - StartTime;
+                MidnightToEndTimeNumOfHours = 0;
+            }
+            // Order of events: BedTime -> Midnight -> StartTime -> EndTime
             else if (BedTime <= Midnight && Midnight <= StartTime && StartTime <= EndTime)
             {
                 StartTimeToBedTimeNumOfHours = 0;
                 BedTimeToMidnightNumOfHours = 0;
                 MidnightToEndTimeNumOfHours = EndTime - StartTime;
             }
-            // Order of events: Midnight => StartTime => EndTime
+            // Order of events: Midnight -> StartTime -> EndTime
             else if (Midnight <= StartTime)
             {
                 StartTimeToBedTimeNumOfHours = 0;

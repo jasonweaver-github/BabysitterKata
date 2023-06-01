@@ -6,7 +6,7 @@
         {
             bool shouldRestart = true;
 
-            // If either the wage is successfully given or an exception is thrown, the application will restart from the beginning.
+            // If either the total is successfully given or an exception is thrown, the application will restart from the beginning.
             while (shouldRestart)
             {
                 try
@@ -26,7 +26,7 @@
                 catch (Exception ex)
                 {
                     Console.WriteLine();
-                    Console.WriteLine(ex.Message); 
+                    Console.WriteLine(ex.Message);
                     Console.WriteLine();
                 }
             }
